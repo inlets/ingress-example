@@ -13,6 +13,21 @@ You'll first install the pre-requisites, then create the Deployment, Service, Is
 
 If you want to use traefik instead, just switch out the `ingressClassName` and skip the `arkade install ingress-nginx` step.
 
+If you don't have a Kubernetes cluster to hand, but have Docker running, then you can run:
+
+```bash
+kind create cluster --name inlets-cloud-test
+```
+
+If you don't have Docker available, but can create a Linux VM somewhere, then you can install K3s with k3sup locally on the host:
+
+```bash
+curl -sLS https://get.k3sup.dev | sh
+k3sup install --local
+```
+
+Or remotely from your own computer via SSH using `k3sup install --ip IP --user USER`.
+
 ## Setup ingress-nginx, cert-manager, etc
 
 ```sh
