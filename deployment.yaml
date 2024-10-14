@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  generation: 1
+  name: nodeinfo
+  labels:
+   app: nodeinfo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodeinfo
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      name: nodeinfo
+      labels:
+        app: nodeinfo
+    spec:
+      containers:
+      - name: nodeinfo
+        image: ghcr.io/openfaas/nodeinfo:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 50m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /_/health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 2
+          periodSeconds: 2
+          successThreshold: 1
+          timeoutSeconds: 1
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
